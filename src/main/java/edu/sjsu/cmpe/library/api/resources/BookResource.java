@@ -1,5 +1,9 @@
 package edu.sjsu.cmpe.library.api.resources;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -15,13 +19,14 @@ import javax.ws.rs.core.Response;
 import com.yammer.dropwizard.jersey.params.LongParam;
 import com.yammer.metrics.annotation.Timed;
 
+
+//import edu.sjsu.cmpe.library.domain.Author;
+//import edu.sjsu.cmpe.library.domain.Author;
 import edu.sjsu.cmpe.library.domain.Book;
-//import edu.sjsu.cmpe.library.domain.Review;
-//import edu.sjsu.cmpe.library.domain.Review;
+import edu.sjsu.cmpe.library.domain.Review;
 import edu.sjsu.cmpe.library.dto.BookDto;
 import edu.sjsu.cmpe.library.dto.LinkDto;
-//import edu.sjsu.cmpe.library.dto.ReviewDto;
-//import edu.sjsu.cmpe.library.dto.ReviewDto;
+import edu.sjsu.cmpe.library.dto.ReviewDto;
 import edu.sjsu.cmpe.library.repository.BookRepositoryInterface;
 
 @Path("/v1/books")
@@ -111,7 +116,100 @@ public class BookResource {
 				"GET"));
 		return bookResponse;
 	    }
-	    	    
+	
+	    /*
+	     * 
+	     */
+	    
+	    
+	    @POST
+	    @Path("/{isbn}/{reviews}")
+	    @Timed(name = "create-book-review")
+	    public ReviewDto createReview(@PathParam("isbn") LongParam isbn, Review newReview){
+	    
+		// Store the new book in the BookRepository so that we can retrieve it.
+	    
+		bookRepository.createReview(isbn.get(),newReview);
+		
+		ReviewDto reviewResponse = new ReviewDto(newReview);
+	    reviewResponse.addLink(new LinkDto("view-review","/books/isbn/reviews/","GET"));
+		return reviewResponse;
+		
+		// Add other links if needed
+		
+	    }
+	    
+	    @GET
+	    @Path("/{isbn}/{reviews}/{id}")
+	    @Timed(name = "view-book-review")
+	    public Response getReviewByIsbn(@PathParam("isbn") LongParam isbn){
+	    	
+	    	//@PathParam("isbn") LongParam isbn
+	    	
+		Book book = bookRepository.getBookByISBN(isbn.get());
+		
+		List<Review> getreview=new ArrayList<Review>();
+		getreview=book.getReviewlist();
+	    
+	    return Response.status(201).entity(getreview).build();
+	    
+		// add more links
+
+	    }
+	    
+	    
+	    
+	    @GET
+	    @Path("{isbn}/{reviews}")	
+	    @Timed(name = "view-all-reviews")
+	    public Response getallReviewsbyIsbn(@PathParam("isbn") LongParam isbn){
+	    	
+	    	Book book = bookRepository.getBookByISBN(isbn.get());
+	    	
+        	List<Review> getreviews=new ArrayList<Review>();
+        	
+	    	getreviews=book.getReviewlist();
+	 
+	    	return Response.status(201).entity(getreviews).build();
+	    	}
+	    
+	  /*  
+	    @GET
+	    @Path("/{isbn}/{authors}/{author_id}")
+	    @Timed(name = "view-book-author")
+	    public Response getAuthorByISBN(@PathParam("isbn") LongParam isbn){
+	    	
+	    	//@PathParam("isbn") LongParam isbn
+	    
+		Book book = bookRepository.getBookByISBN(isbn.get());
+		
+		List<Author> getauthor=new ArrayList<Author>();
+		getauthor=book.getAuthorlist();
+	    
+	    return Response.status(201).entity(getauthor).build();
+	    
+		// add more links
+
+	    }
+	    */
+	    
+	    /*
+	    
+	    @GET
+	    @Path("/{isbn}/{authors}/")
+	    @Timed(name = " view-all-authors")
+	    public Response getallAuthorsByIsbn(@PathParam("isbn") LongParam isbn){
+	    	
+	    	Book book = bookRepository.getBookByISBN(isbn.get());
+	    	
+	    	List<Author> getauthors=new ArrayList<Author>();
+	    	getauthors=book.getAuthorlist();
+	    	
+	    return Response.status(201).entity(getauthors).build();
+	    	
+	    }
+	    
+	   */ 
 	// add more links
 	 }
 	

@@ -1,7 +1,8 @@
 package edu.sjsu.cmpe.library.repository;
 
 import edu.sjsu.cmpe.library.domain.Book;
-//import edu.sjsu.cmpe.library.domain.Review;
+import edu.sjsu.cmpe.library.domain.Review;
+
 
 
 /**
@@ -21,7 +22,8 @@ public interface BookRepositoryInterface {
      */
     Book saveBook(Book newBook);
     
-    //Review createReview(Book newBook, Review newReview);
+    
+    void createReview(Long isbn, Review newReview);
 
     /**
      * Retrieve an existing book by ISBN

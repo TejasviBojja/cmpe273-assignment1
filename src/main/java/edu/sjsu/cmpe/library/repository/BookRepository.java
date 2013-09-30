@@ -3,35 +3,42 @@ package edu.sjsu.cmpe.library.repository;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import edu.sjsu.cmpe.library.domain.Book;
-//import edu.sjsu.cmpe.library.domain.Review;
+import edu.sjsu.cmpe.library.domain.Review;
+import edu.sjsu.cmpe.library.domain.Author;
 
 
 public class BookRepository implements BookRepositoryInterface {
-    /** In-memory map to store books. (Key, Value) -> (ISBN, Book) */
+   // private static final int Long = 0;
+
+
+	//private static final String String = null;
+
+
+	/** In-memory map to store books. (Key, Value) -> (ISBN, Book) */
     private final ConcurrentHashMap<Long, Book> bookInMemoryMap;
-    //private final ConcurrentHashMap<Long, Review> reviewInMemoryMap;
+    
     
     /** Never access this key directly; instead use generateISBNKey() */
     private long isbnKey;
-  //  private long idKey;
+    private long idKey;
+    private long author_idKey;
     
 
     public BookRepository(ConcurrentHashMap<Long, Book> bookMap) {
 	checkNotNull(bookMap, "bookMap must not be null for BookRepository");
 	bookInMemoryMap = bookMap;
 	isbnKey = 0;
+	idKey = 0;
+	author_idKey = 0;
     }
 
-   /* public BookRepository(ConcurrentHashMap<Long, Review> reviewMap) {
-    	checkNotNull(reviewMap, "reviewMap must not be null for BookRepository");
-    	reviewInMemoryMap = reviewMap;
-    	idKey = 0;
-    	
-        }
-*/
+   
+    
     /**
      * This should be called if and only if you are adding new books to the
      * repository.
@@ -40,15 +47,19 @@ public class BookRepository implements BookRepositoryInterface {
      */
     private final Long generateISBNKey() {
 	// increment existing isbnKey and return the new value
-	return Long.valueOf(++isbnKey);
+	return ++isbnKey;
     }
 
-/*
+
     private final Long generateIDKey() {
 		// TODO Auto-generated method stub
-		return Long.valueOf(++idKey);
+		return ++idKey;
 	}
-	*/
+	
+    private final Long generateAUTHOR_IDKey() {
+		// TODO Auto-generated method stub
+		return ++author_idKey;
+	}
 	
     /**
      * This will auto-generate unique ISBN for new books.
@@ -60,7 +71,9 @@ public class BookRepository implements BookRepositoryInterface {
 	Long isbn = generateISBNKey();
 	newBook.setIsbn(isbn);
 	// TODO: create and associate other fields such as author
-
+	Author authorobj = new Author();
+	Long author_id = generateAUTHOR_IDKey();
+	authorobj.setAuthor_id(author_id);
 	// Finally, save the new book into the map
 	bookInMemoryMap.putIfAbsent(isbn, newBook);
 
@@ -68,22 +81,28 @@ public class BookRepository implements BookRepositoryInterface {
     }
     
     
- /*
+
     @Override
-    public Book createReview(Book newBook, Review newReview){
-    	checkNotNull(newBook, "newBook instance must not be null");
+    public void createReview(Long isbn, Review newReview){
+    	//checkNotNull(newBook, "newBook instance must not be null");
+    	//Review newReview = new Review(); 
+    	//newReview.getRating();
+    	//newReview.getComment();
+    	
     	Long id = generateIDKey();
     	newReview.setId(id);
-    	
-    	List<newReview> reviewlist= new ArrayList<newReview>();
+    
+    	List<Review> reviewlist= new ArrayList<Review>();
     	reviewlist.add(newReview);
-    	return reviewlist;
     	
-    	//reviewInMemoryMap.putIfAbsent(id, newReview);
+    	Book book= getBookByISBN(isbn);
+    	book.setReviewlist(reviewlist);
+    	
+    	//bookInMemoryMap.putifAbsent(isbn, newReview);
     	//return newReview;
+    	saveBook(book);
     }
     
-  */
 
 
 	/**

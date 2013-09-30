@@ -3,6 +3,7 @@ package edu.sjsu.cmpe.library.domain;
 
 public class Author {
 	
+	
 	private long author_id;
     private String name;
     

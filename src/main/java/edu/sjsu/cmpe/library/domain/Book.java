@@ -1,4 +1,10 @@
 package edu.sjsu.cmpe.library.domain;
+
+
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Book {
@@ -12,7 +18,28 @@ public class Book {
     @JsonProperty("num-pages")
     private String numpages;
     private String status="available";
+    @JsonProperty("reviews")
+    List<Review> reviewlist = new ArrayList<Review>();
+    @JsonProperty("authors")
+    List<Author> authorlist = new ArrayList<Author>();
     
+	public List<Review> getReviewlist() {
+		return reviewlist;
+	}
+
+	public void setReviewlist(List<Review> reviewlist) {
+		this.reviewlist = reviewlist;
+	}
+
+	public List<Author> getAuthorlist() {
+		return authorlist;
+	}
+
+	public void setAuthorlist(List<Author> authorlist) {
+		this.authorlist = authorlist;
+	}
+
+	
     
     // add more fields here
 
