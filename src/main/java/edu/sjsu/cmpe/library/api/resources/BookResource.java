@@ -69,7 +69,6 @@ public class BookResource {
     }
 
     @POST
-    @Path("/{isbn}")
     @Timed(name = "create-book")
     public Response createBook(Book request) {
 	// Store the new book in the BookRepository so that we can retrieve it.
